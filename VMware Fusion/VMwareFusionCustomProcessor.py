@@ -3,42 +3,75 @@
 """ comments go here
 """
 
-import urllib, urllib2
+import urllib, urllib2, gzip
 
 from xml.etree import ElementTree
+from StringIO import StringIO
 
-url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/fusion.xml'
-request = urllib2.Request(url)
+# variables 
+base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
+fusion = 'fusion.xml'
 
-try:
-    vsus = urllib2.urlopen(request)
-except URLError, e:
-    print e.reason
+# functions
+def core_metadata(url): 
+    request = urllib2.Request(url)
 
-data = vsus.read()
-# print data
+    try:
+        vsus = urllib2.urlopen(request)
+    except URLError, e:
+        print e.reason
 
-try:
-    metaList = ElementTree.fromstring(data)
-except ExpatData:
-    print "Unable to parse XML data from string"
+    data = vsus.read()
+    # print data
 
-versions = []
-for metadata in metaList:
-    version = metadata.find("version")
-    versions.append(version.text)
+    try:
+        metaList = ElementTree.fromstring(data)
+    except ExpatData:
+        print "Unable to parse XML data from string"
 
-versions.sort()
-latest = versions[-1]
-# print latest
+    versions = []
+    for metadata in metaList:
+        version = metadata.find("version")
+        versions.append(version.text)
 
-urls = []
-for metadata in metaList:
-    url = metadata.find("url")
-    urls.append(url.text)
+    versions.sort()
+    latest = versions[-1]
+    # print latest
 
-matching = [s for s in urls if latest in s]
-core = [s for s in matching if "core" in s]
-print core[0]
+    urls = []
+    for metadata in metaList:
+        url = metadata.find("url")
+        urls.append(url.text)
 
-vsus.close()
+    matching = [s for s in urls if latest in s]
+    core = [s for s in matching if "core" in s]
+    return core[0]
+
+    vsus.close()
+
+def zip_tar(metadataXML):
+    request = urllib2.Request(base_url+metadataXML)
+    # request.add_header('Accept-encoding', 'gzip')
+    vLatest = urllib2.urlopen(request)
+    buf = StringIO( vLatest.read())
+    f = gzip.GzipFile(fileobj=buf)
+    data = f.read()
+    # print data
+
+    try:
+        metadataResponse = ElementTree.fromstring(data)
+    except ExpatData:
+        print "Unable to parse XML data from string"
+
+    relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
+    return relativePath.text
+
+print base_url
+metadataXML = core_metadata(base_url+fusion)
+print metadataXML
+ziptar = zip_tar(metadataXML)
+print ziptar
+download = metadataXML.replace("metadata.xml.gz", ziptar)
+print download
+# urllib.urlretrieve(base_url + download)
+
