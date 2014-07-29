@@ -52,7 +52,12 @@ def core_metadata(url):
 def zip_tar(metadataXML):
     request = urllib2.Request(base_url+metadataXML)
     # request.add_header('Accept-encoding', 'gzip')
-    vLatest = urllib2.urlopen(request)
+
+    try: 
+        vLatest = urllib2.urlopen(request)
+    except URLError, e:
+        print e.reason
+    
     buf = StringIO( vLatest.read())
     f = gzip.GzipFile(fileobj=buf)
     data = f.read()
