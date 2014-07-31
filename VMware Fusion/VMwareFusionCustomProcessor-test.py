@@ -88,6 +88,6 @@ print metadataXML
 ziptar = zip_tar(metadataXML)
 print ziptar
 download = metadataXML.replace("metadata.xml.gz", ziptar)
-print download
+print base_url+download
 # urllib.urlretrieve(base_url + download)
 
