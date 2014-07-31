@@ -48,8 +48,9 @@ class VMwareFusionURLProvider(Processor):
 
     __doc__ = description
 
-    def core_metadata(url): 
-        request = urllib2.Request(url)
+    def core_metadata(self, base_url, product_name): 
+        request = urllib2.Request(base_url+fusion)
+        # print base_url
 
         try:
             vsus = urllib2.urlopen(request)
@@ -80,13 +81,11 @@ class VMwareFusionURLProvider(Processor):
 
         matching = [s for s in urls if latest in s]
         core = [s for s in matching if "core" in s]
-        return core[0]
+        # print core[0]
 
         vsus.close()
 
-    def zip_tar(metadataXML):
-        request = urllib2.Request(BASE_URL+metadataXML)
-        # request.add_header('Accept-encoding', 'gzip')
+        request = urllib2.Request(base_url+core[0])
 
         try: 
             vLatest = urllib2.urlopen(request)
@@ -104,17 +103,10 @@ class VMwareFusionURLProvider(Processor):
             print "Unable to parse XML data from string"
 
         relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
-        return relativePath.text
+        # print core[0].replace("metadata.xml.gz", relativePath.text)
+        return base_url+core[0].replace("metadata.xml.gz", relativePath.text)
 
     def main(self):
-        # print BASE_URL
-        metadataXML = core_metadata(BASE_URL+FUSION)
-        # print metadataXML
-        ziptar = zip_tar(metadataXML)
-        # print ziptar
-        downloadURL = BASE_URL+metadataXML.replace("metadata.xml.gz", ziptar)
-        # print BASE_URL+downloadURL
-
         # Determine product_name, and base_url.
         product_name = self.env["product_name"]
         base_url = self.env.get("base_url", BASE_URL)
