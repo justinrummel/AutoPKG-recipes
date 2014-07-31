@@ -24,7 +24,7 @@ __all__ = ["VMwareFusionURLProvider"]
 
 
 # variables 
-BASE_URL = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
+VMWARE_BASE_URL = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
 FUSION = 'fusion.xml'
 
 class VMwareFusionURLProvider(Processor):
@@ -37,7 +37,7 @@ class VMwareFusionURLProvider(Processor):
         },
         "base_url": {
             "required": False,
-            "description": "Default is '%s." % BASE_URL,
+            "description": "Default is '%s." % VMWARE_BASE_URL,
         },
     }
     output_variables = {
@@ -108,8 +108,8 @@ class VMwareFusionURLProvider(Processor):
 
     def main(self):
         # Determine product_name, and base_url.
-        product_name = self.env["product_name"]
-        base_url = self.env.get("base_url", BASE_URL)
+        product_name = self.env["product_name", FUSION]
+        base_url = self.env.get("base_url", VMWARE_BASE_URL)
         
         self.env["url"] = self.core_metadata(base_url, product_name)
         self.output("Found URL %s" % self.env["url"])
