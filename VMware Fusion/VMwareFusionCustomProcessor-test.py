@@ -24,8 +24,9 @@ base_url = 'https://softwareupdate.vmware.com/cds/vmw-desktop/'
 fusion = 'fusion.xml'
 
 # functions
-def core_metadata(url): 
-    request = urllib2.Request(url)
+def core_metadata(base_url, fusion): 
+    request = urllib2.Request(base_url+fusion)
+    print base_url
 
     try:
         vsus = urllib2.urlopen(request)
@@ -56,13 +57,11 @@ def core_metadata(url):
 
     matching = [s for s in urls if latest in s]
     core = [s for s in matching if "core" in s]
-    return core[0]
+    print core[0]
 
     vsus.close()
 
-def zip_tar(metadataXML):
-    request = urllib2.Request(base_url+metadataXML)
-    # request.add_header('Accept-encoding', 'gzip')
+    request = urllib2.Request(base_url+core[0])
 
     try: 
         vLatest = urllib2.urlopen(request)
@@ -80,14 +79,7 @@ def zip_tar(metadataXML):
         print "Unable to parse XML data from string"
 
     relativePath = metadataResponse.find("bulletin/componentList/component/relativePath")
-    return relativePath.text
+    print core[0].replace("metadata.xml.gz", relativePath.text)
+    print base_url+core[0].replace("metadata.xml.gz", relativePath.text)
 
-print base_url
-metadataXML = core_metadata(base_url+fusion)
-print metadataXML
-ziptar = zip_tar(metadataXML)
-print ziptar
-download = metadataXML.replace("metadata.xml.gz", ziptar)
-print base_url+download
-# urllib.urlretrieve(base_url + download)
-
+core_metadata(base_url, fusion)
