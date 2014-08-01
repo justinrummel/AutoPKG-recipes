@@ -108,7 +108,7 @@ class VMwareFusionURLProvider(Processor):
 
     def main(self):
         # Determine product_name, and base_url.
-        product_name = self.env.get["product_name", FUSION]
+        product_name = self.env["product_name", FUSION]
         base_url = self.env.get("base_url", VMWARE_BASE_URL)
         
         self.env["url"] = self.core_metadata(base_url, product_name)
