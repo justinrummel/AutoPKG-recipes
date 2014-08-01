@@ -1,8 +1,4 @@
 1Password pkg and JSS
 ===============
 
-This is based off of https://github.com/autopkg/keeleysam-recipes/blob/master/Bjango/iStatMenus/iStatMenus.download.recipe Download recipe.  Be sure that his is part of your AutoPKG by running:
-
-``` bash
-autopkg repo-add https://github.com/autopkg/keeleysam-recipes
-```
+The Download recipe is really from com.github.keeleysam.recipes.Bjango.iStatMenus.download, however, the iStatMenu subfolder made things not work.  Gave up on getting it resolved as requested: https://github.com/autopkg/keeleysam-recipes/issues/11.
