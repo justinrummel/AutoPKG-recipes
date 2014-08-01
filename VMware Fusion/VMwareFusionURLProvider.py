@@ -49,7 +49,7 @@ class VMwareFusionURLProvider(Processor):
     __doc__ = description
 
     def core_metadata(self, base_url, product_name): 
-        request = urllib2.Request(base_url+fusion)
+        request = urllib2.Request(base_url+product_name)
         # print base_url
 
         try:
