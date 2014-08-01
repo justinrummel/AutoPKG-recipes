@@ -32,7 +32,7 @@
 				<string>tar</string>
 			</dict>
 		</dict>
-<!-- 		<dict>
+ 		<dict>
 			<key>Processor</key>
 			<string>Unarchiver</string>
 			<key>Arguments</key>
@@ -47,7 +47,7 @@
 				<string>zip</string>
 			</dict>
 		</dict>
-		<dict>
+<!-- 		<dict>
 			<key>Comment</key>
 			<string>Extract a version string from version.plist to use for the package.</string>
 			<key>Processor</key>
