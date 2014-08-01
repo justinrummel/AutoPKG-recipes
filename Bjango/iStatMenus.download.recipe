@@ -7,7 +7,7 @@
 		<key>IDENTIFIER</key>
 		<string>com.justinrummel.download.iStatMenus</string>
 		<key>NAME</key>
-		<string>Opera</string>
+		<string>iStatMenus</string>
 		<key>DOWNLOAD_URL</key>
 		<string>http://download.bjango.com/istatmenus/</string>
 		<key>USER_AGENT</key>
