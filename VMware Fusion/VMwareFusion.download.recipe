@@ -16,22 +16,22 @@
 	<key>Process</key>
 	<array>
 		<dict>
+			<key>Processor</key>
+			<string>VMwareFusionURLProvider</string>
 			<key>Arguments</key>
 			<dict>
 				<key>product_name</key>
 				<string>fusion.xml</string>
 			</dict>
-			<key>Processor</key>
-			<string>VMwareFusionURLProvider</string>
 		</dict>
 		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
 			<key>Arguments</key>
 			<dict>
 				<key>filename</key>
 				<string>%NAME%.zip.tar</string>
 			</dict>
-			<key>Processor</key>
-			<string>URLDownloader</string>
 		</dict>
 		<dict>
 			<key>Processor</key>
