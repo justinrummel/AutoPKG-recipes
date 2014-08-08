@@ -59,8 +59,8 @@ class FlatPkgFromBundle(Processor):
             try:
                 shutil.rmtree(expand_dir)
             except (OSError, IOError), err:
-                raise ProccessorError(
-                    "Can't remove %s: %s" % (expand_dir, err))
+                raise ProcessorError(
+                    "expand Can't remove %s: %s" % (expand_dir, err))
         try:
             subprocess.check_call(
                 ['/bin/pax', '-rzf', pkg_path+"/Contents/Archive.pax.gz"])
@@ -73,8 +73,8 @@ class FlatPkgFromBundle(Processor):
             try:
                 os.unlink(destination)
             except OSError, err:
-                raise ProccessorError(
-                    "Can't remove %s: %s" % (destination, err))
+                raise ProcessorError(
+                    "flatten Can't remove %s: %s" % (destination, err))
         try:
             subprocess.check_call(
                 ['/usr/sbin/pkgutil', '--flatten', expanded_pkg, destination])
@@ -83,12 +83,11 @@ class FlatPkgFromBundle(Processor):
                 "%s flattening %s" % (err, expanded_pkg))
 
     def main(self):
-        try:
-            expand_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "NAME")
-            modified_pkg = os.path.join(self.env["RECIPE_CACHE_DIR"], os.path.basename(self.env["pkg_path"]))
-            expanded_pkg = self.expand(self.env["pkg_path"], expand_dir)
-            self.flatten(expanded_pkg, modified_pkg)
-            self.env["pkg_path"] = modified_pkg
+        expand_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "NAME")
+        modified_pkg = os.path.join(self.env["RECIPE_CACHE_DIR"], os.path.basename(self.env["pkg_path"]))
+        expanded_pkg = self.expand(self.env["pkg_path"], expand_dir)
+        self.flatten(expanded_pkg, modified_pkg)
+        self.env["pkg_path"] = modified_pkg
 
 if __name__ == "__main__":
     processor = FlatPkgFromBundle()
