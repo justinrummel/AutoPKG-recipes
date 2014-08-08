@@ -17,13 +17,11 @@
 import os
 import shutil
 import subprocess
-from xml.etree import ElementTree
 
+from xml.etree import ElementTree
 from autopkglib import Processor, ProcessorError
 
-
 __all__ = ["FlatPkgFromBundle"]
-
 
 class FlatPkgFromBundle(Processor):
     
@@ -53,14 +51,6 @@ class FlatPkgFromBundle(Processor):
     }
 
     __doc__ = description
-
-#    def find_pkg(self, dir_path):
-#        '''Return path to the first package in dir_path'''
-#        for item in os.listdir(dir_path):
-#            if item.endswith(".pkg"):
-#                return os.path.join(dir_path, item)
-#        raise ProcessorError(
-#            "No package found in %s" % dir_path)
 
     def expand(self, pkg_path, expand_dir):
         '''Uses pax to expand a bundle package.'''
@@ -94,22 +84,12 @@ class FlatPkgFromBundle(Processor):
 
     def main(self):
         try:
-#            pkg = self.find_pkg(bundle_pkg_path)
-            expand_dir = os.path.join(
-                self.env["RECIPE_CACHE_DIR"], "NAME")
-            modified_pkg = os.path.join(
-                self.env["RECIPE_CACHE_DIR"], os.path.basename(pkg_path))
-            expanded_pkg = self.expand(pkg_path, expand_dir)
-#            self.modify_distribution(expanded_pkg)
-#            self.replace_app_preinstall(expanded_pkg)
+            expand_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "NAME")
+            modified_pkg = os.path.join(self.env["RECIPE_CACHE_DIR"], os.path.basename(self.env["pkg_path"]))
+            expanded_pkg = self.expand(self.env["pkg_path"], expand_dir)
             self.flatten(expanded_pkg, modified_pkg)
             self.env["pkg_path"] = modified_pkg
 
-        except BaseException, err:
-            raise ProcessorError(err)
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     processor = FlatPkgFromBundle()
     processor.execute_shell()
-        
