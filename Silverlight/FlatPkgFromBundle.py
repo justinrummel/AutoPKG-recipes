@@ -45,6 +45,10 @@ class FlatPkgFromBundle(Processor):
             "required": True,
             "description": "Path to a bundle PKG.",
         },
+        "flat_cache": {
+            "required": True,
+            "description": "Containing folder for new flat pkg",
+        },
     }
     output_variables = {
         "flat_pkg_path": "Path to the repackaged package."
@@ -52,18 +56,18 @@ class FlatPkgFromBundle(Processor):
 
     __doc__ = description
 
-    def expand(self, pkg_path, expand_dir):
+    def expand(self, pkg_path, flat_cache):
         '''Uses pax to expand a bundle package.'''
 
-        if os.path.isdir(expand_dir):
+        if os.path.isdir(flat_cache):
             try:
-                shutil.rmtree(expand_dir)
+                shutil.rmtree(flat_cache)
             except (OSError, IOError), err:
                 raise ProcessorError(
-                    "expand Can't remove %s: %s" % (expand_dir, err))
+                    "expand Can't remove %s: %s" % (flat_cache, err))
         try:
             subprocess.check_call(
-                ['/bin/pax', '-rzf', pkg_path+"/Contents/Archive.pax.gz"])
+                ['/bin/pax', '-rwzf', pkg_path+"/Contents/Archive.pax.gz", flat_cache])
         except subprocess.CalledProcessError, err:
             raise ProcessorError("%s expanding %s" % (err, pkg_path))
 
@@ -83,6 +87,7 @@ class FlatPkgFromBundle(Processor):
                 "%s flattening %s" % (err, expanded_pkg))
 
     def main(self):
+#        make_dir = os.mkdir(self.env["flat_cache"])
         expand_dir = os.path.join(self.env["RECIPE_CACHE_DIR"], "NAME")
         modified_pkg = os.path.join(self.env["RECIPE_CACHE_DIR"], os.path.basename(self.env["pkg_path"]))
         expanded_pkg = self.expand(self.env["pkg_path"], expand_dir)
